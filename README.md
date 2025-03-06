@@ -2,6 +2,10 @@
 
 A fun, interactive chatbot that sorts Recurse Center students into Hogwarts houses based on their programming interests and personality traits.
 
+**Live Demo:** [https://sorting-octopus.fly.dev](https://sorting-octopus.fly.dev)
+
+![Sorting Octopus](https://github.com/andrewlidong/sorting-octopus/raw/main/priv/static/images/sorting-octopus-screenshot.png)
+
 ## About
 
 The Sorting Octopus is a modern take on the Hogwarts Sorting Hat, designed specifically for programmers at the Recurse Center. During a 60-second conversation, the Octopus analyzes your responses to determine which programming house best matches your style and approach:
@@ -18,12 +22,14 @@ The Sorting Octopus is a modern take on the Hogwarts Sorting Hat, designed speci
 - Keyword analysis to determine your dominant traits
 - Custom house descriptions tailored to the Recurse Center context
 - Responsive design with modern UI elements
+- CSRF protection for secure form submissions
 
 ## Technology Stack
 
 - **Backend**: Elixir with Phoenix Framework
 - **Frontend**: HTML, CSS, JavaScript
 - **Styling**: Custom CSS with Poppins font
+- **Deployment**: Fly.io
 
 ## Getting Started
 
@@ -37,7 +43,7 @@ The Sorting Octopus is a modern take on the Hogwarts Sorting Hat, designed speci
 
 1. Clone the repository:
    ```
-   git clone https://github.com/yourusername/sorting-octopus.git
+   git clone https://github.com/andrewlidong/sorting-octopus.git
    cd sorting-octopus
    ```
 
@@ -53,16 +59,47 @@ The Sorting Octopus is a modern take on the Hogwarts Sorting Hat, designed speci
 
 4. Visit [`localhost:4000`](http://localhost:4000) in your browser
 
-## How It Works
+## Deployment
 
-The Sorting Octopus analyzes your conversation for keywords associated with different traits:
+The app is deployed on Fly.io. To deploy your own instance:
 
-- **Bravery** (Gryffindor): Words like "challenge," "courage," "risk," "adventure"
-- **Intelligence** (Ravenclaw): Words like "learn," "knowledge," "curious," "problem"
-- **Loyalty** (Hufflepuff): Words like "team," "help," "friend," "community"
-- **Ambition** (Slytherin): Words like "goal," "achieve," "lead," "success"
+1. Install the Fly.io CLI:
+   ```
+   brew install flyctl
+   ```
 
-After the 60-second conversation, you'll be sorted into the house that best matches your dominant trait.
+2. Log in to Fly.io:
+   ```
+   fly auth login
+   ```
+
+3. Create a new app:
+   ```
+   fly apps create your-app-name
+   ```
+
+4. Set up a secret key:
+   ```
+   fly secrets set SECRET_KEY_BASE=$(mix phx.gen.secret)
+   ```
+
+5. Deploy the app:
+   ```
+   fly deploy
+   ```
+
+## Development Process
+
+This project was built as a fun way to welcome new Recurse Center participants. The development process included:
+
+1. Setting up a basic Phoenix application
+2. Creating the chat interface with JavaScript
+3. Implementing the sorting algorithm based on keyword analysis
+4. Adding a timer for the conversation
+5. Styling the application with a modern UI
+6. Deploying to Fly.io
+
+For more details about the development process, check out the [blog post](https://github.com/andrewlidong/sorting-octopus/blob/main/BLOG.md).
 
 ## Contributing
 
@@ -70,7 +107,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
 
