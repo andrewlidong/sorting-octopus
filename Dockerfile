@@ -39,11 +39,15 @@ ENV LC_ALL en_US.UTF-8
 # Set environment variables
 ENV MIX_ENV=prod
 ENV PORT=8080
+ENV PHX_SERVER=true
 
 WORKDIR /app
 
 # Copy the release from the build stage
 COPY --from=build /app/_build/prod/rel/sorting_hat ./
+
+# Expose the port
+EXPOSE 8080
 
 # Set the entrypoint
 CMD ["bin/sorting_hat", "start"] 
