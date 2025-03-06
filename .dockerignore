@@ -1,0 +1,28 @@
+# Git
+.git
+.gitignore
+
+# Elixir
+/_build/
+/deps/
+/doc/
+/cover/
+/.fetch
+erl_crash.dump
+*.ez
+sorting_hat-*.tar
+
+# Temporary files
+/tmp/
+
+# macOS
+.DS_Store
+
+# Editor files
+.elixir_ls/
+.vscode/
+.idea/
+
+# Environment variables
+.env
+.env.* 
