@@ -1,5 +1,5 @@
 # Use the official Elixir image as the base image
-FROM hexpm/elixir:1.18.3-erlang-26.2.1-debian-bullseye-20240130 as build
+FROM hexpm/elixir:1.14.4-erlang-25.3-debian-bullseye-20230227 as build
 
 # Install build dependencies
 RUN apt-get update -y && apt-get install -y build-essential git \
@@ -38,7 +38,7 @@ ENV LC_ALL en_US.UTF-8
 
 # Set environment variables
 ENV MIX_ENV=prod
-ENV PORT=4000
+ENV PORT=8080
 
 WORKDIR /app
 
