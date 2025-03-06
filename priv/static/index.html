@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hogwarts Sorting Hat</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            background: #1a1a1a;
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-image: url('https://images.unsplash.com/photo-1600289031464-74ea4958d326?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            margin: 2rem auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #d4af37;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .question-container {
+            margin-bottom: 2rem;
+        }
+
+        .question {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: #d4af37;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #d4af37;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        button {
+            background: #d4af37;
+            color: #000;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 2rem auto;
+        }
+
+        button:hover {
+            background: #c19b2e;
+            transform: scale(1.05);
+        }
+
+        #result {
+            text-align: center;
+            font-size: 1.5rem;
+            margin-top: 2rem;
+            padding: 1rem;
+            border-radius: 5px;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid #d4af37;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Hogwarts Sorting Hat</h1>
+        <div id="questions"></div>
+        <button onclick="submitAnswers()">Sort Me!</button>
+        <div class="loading" id="loading"></div>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const API_URL = '/api';
+        let questions = [];
+
+        async function fetchQuestions() {
+            try {
+                const response = await fetch(`${API_URL}/questions`);
+                const data = await response.json();
+                questions = data.questions;
+                displayQuestions();
+            } catch (error) {
+                console.error('Error fetching questions:', error);
+            }
+        }
+
+        function displayQuestions() {
+            const container = document.getElementById('questions');
+            container.innerHTML = questions.map((question, index) => `
+                <div class="question-container">
+                    <div class="question">${question}</div>
+                    <textarea id="answer-${index}" placeholder="Your answer..."></textarea>
+                </div>
+            `).join('');
+        }
+
+        async function submitAnswers() {
+            const loading = document.getElementById('loading');
+            const result = document.getElementById('result');
+            loading.style.display = 'block';
+            result.textContent = '';
+
+            const answers = questions.map((_, index) => 
+                document.getElementById(`answer-${index}`).value.trim()
+            );
+
+            if (answers.some(answer => !answer)) {
+                alert('Please answer all questions!');
+                loading.style.display = 'none';
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/sort`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ answers }),
+                });
+
+                const data = await response.json();
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                result.textContent = data.result;
+            } catch (error) {
+                result.textContent = `Error: ${error.message}`;
+            } finally {
+                loading.style.display = 'none';
+            }
+        }
+
+        // Initialize the application
+        fetchQuestions();
+    </script>
+</body>
+</html> 
